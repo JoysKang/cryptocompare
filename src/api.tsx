@@ -30,9 +30,17 @@ const requests = {
 export async function fetchData(searchCryptos: string) {
   try {
     if (searchCryptos) {
-      searchCryptos = searchCryptos.toUpperCase();
-      cryptoList.push(searchCryptos);
-      cryptos += "," + searchCryptos;
+      // 单次搜索多个交易对
+      if (searchCryptos.includes(",")) {
+        searchCryptos.split(",").map((item) => {
+          cryptoList.push(item.toUpperCase());
+          cryptos += "," + searchCryptos;
+        });
+      } else {
+        searchCryptos = searchCryptos.toUpperCase();
+        cryptoList.push(searchCryptos);
+        cryptos += "," + searchCryptos;
+      }
     }
     // console.log("https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos);
     const response = await requests.get(
