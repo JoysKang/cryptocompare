@@ -30,12 +30,12 @@ export default function Command() {
       isLoading={isLoading}
       filtering={false}
       onSearchTextChange={async (SearchText) => {
+        // 实现延迟搜索
         changeNumber += 1;
         const currentChangeNumber = changeNumber;
-        // console.log("delay before", currentChangeNumber, changeNumber);
         await delay(1000);
-        // console.log("delay after", currentChangeNumber, changeNumber);
 
+        // 过滤非正常搜索 + 延迟搜索
         if (
           SearchText === "" ||
           cryptoList.includes(SearchText.toUpperCase()) ||

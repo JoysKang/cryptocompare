@@ -21,6 +21,12 @@ const requests = {
   get: (url: string, config: AxiosRequestConfig = {}) => instance.get(url, config).then(responseBody),
 };
 
+/**
+ * Fetches data based on the specified search criteria.
+ *
+ * @param {string} searchCryptos - The search criteria for cryptos.
+ * @return {Promise<Array>} An array of new price data.
+ */
 export async function fetchData(searchCryptos: string) {
   try {
     if (searchCryptos) {
@@ -44,7 +50,7 @@ export async function fetchData(searchCryptos: string) {
       let icon = "";
       const crypto = response.RAW[item];
       if (crypto === undefined) {
-        return { icon: "", name: item, price: "Price not found." };
+        return { icon: "not-found.png", name: item, price: "Price not found." };
       }
 
       for (const [key, value] of Object.entries(fiatSymbol)) {
