@@ -51,8 +51,12 @@ export async function fetchData(searchCryptos: string) {
       let priceStr = "";
       let icon = "";
       const crypto = response.RAW[item];
+      if (crypto === undefined) {
+        return { icon: "", name: item, price: "Price not found." };
+      }
+
       for (const [key, value] of Object.entries(fiatSymbol)) {
-        if (crypto[key]) {
+        if (key in crypto && crypto[key]) {
           priceStr += value + crypto[key].PRICE + "  ";
           icon = "https://cryptocompare.com" + crypto[key].IMAGEURL;
         }

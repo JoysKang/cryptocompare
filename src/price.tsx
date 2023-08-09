@@ -33,7 +33,7 @@ export default function Command() {
         changeNumber += 1;
         const currentChangeNumber = changeNumber;
         // console.log("delay before", currentChangeNumber, changeNumber);
-        await delay(1500);
+        await delay(1000);
         // console.log("delay after", currentChangeNumber, changeNumber);
 
         if (
