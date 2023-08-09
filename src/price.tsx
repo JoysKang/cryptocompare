@@ -1,6 +1,6 @@
 import { List, Action, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { fetchData } from "./api";
+import { fetchData, cryptoList } from "./api";
 
 interface Data {
   icon: string;
@@ -27,6 +27,10 @@ export default function Command() {
       isLoading={isLoading}
       filtering={false}
       onSearchTextChange={async (SearchText) => {
+        if (SearchText === "" || cryptoList.includes(SearchText.toUpperCase())) {
+          return;
+        }
+
         setIsLoading(true);
         setPriceData(await fetchData(SearchText));
         setIsLoading(false);

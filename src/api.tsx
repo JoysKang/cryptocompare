@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const cryptos = "BTC,ETH,USDT";
-const cryptoList: string[] = ["BTC", "ETH", "USDT"];
+export const cryptoList: string[] = ["BTC", "ETH", "USDT"];
 const fiats = "USD,EUR,AUD,CNY";
 const fiatSymbol = {
   USD: "$",
@@ -54,7 +54,8 @@ export async function fetchData(searchCryptos: string) {
 
     // console.log(JSON.stringify(response));
     if (!response) {
-      throw new Error("Failed to fetch the coin list");
+      console.log(JSON.stringify(response));
+      return [];
     }
 
     const newPriceData = cryptoList.map((item) => {
@@ -74,6 +75,6 @@ export async function fetchData(searchCryptos: string) {
     return newPriceData;
   } catch (e) {
     console.log(e);
-    throw new Error("Failed to fetch the coin list");
+    return [];
   }
 }
