@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const cryptos = "BTC,ETH,USDT";
+let cryptos = "BTC,ETH,USDT";
 export const cryptoList: string[] = ["BTC", "ETH", "USDT"];
 const fiats = "USD,EUR,AUD,CNY";
 const fiatSymbol = {
@@ -23,23 +23,15 @@ const requests = {
 
 export async function fetchData(searchCryptos: string) {
   try {
-    let response: AxiosResponse;
-    if (!searchCryptos || searchCryptos == undefined) {
-      response = await requests.get(
-        "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos
-      );
-    } else {
+    if (searchCryptos) {
       searchCryptos = searchCryptos.toUpperCase();
       cryptoList.push(searchCryptos);
-      response = await requests.get(
-        "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" +
-          fiats +
-          "&fsyms=" +
-          cryptos +
-          "," +
-          searchCryptos
-      );
+      cryptos += "," + searchCryptos;
     }
+    // console.log("https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos);
+    const response = await requests.get(
+      "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos
+    );
 
     // console.log(JSON.stringify(response));
     if (!response) {
