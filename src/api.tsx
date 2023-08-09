@@ -30,18 +30,7 @@ export async function fetchData(searchCryptos: string) {
       );
     } else {
       searchCryptos = searchCryptos.toUpperCase();
-      console.log(
-        "88888",
-        searchCryptos,
-        "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" +
-          fiats +
-          "&fsyms=" +
-          cryptos +
-          "," +
-          searchCryptos
-      );
       cryptoList.push(searchCryptos);
-      console.log(cryptoList);
       response = await requests.get(
         "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" +
           fiats +

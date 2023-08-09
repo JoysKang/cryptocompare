@@ -1,6 +1,7 @@
 import { List, Action, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { fetchData, cryptoList } from "./api";
+import { delay } from "./utils";
 
 interface Data {
   icon: string;
@@ -9,6 +10,7 @@ interface Data {
 }
 
 export default function Command() {
+  let changeNumber = 0;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [priceData, setPriceData] = useState<Data[]>([]);
 
@@ -24,10 +26,21 @@ export default function Command() {
 
   return (
     <List
+      selectedItemId="USDT"
       isLoading={isLoading}
       filtering={false}
       onSearchTextChange={async (SearchText) => {
-        if (SearchText === "" || cryptoList.includes(SearchText.toUpperCase())) {
+        changeNumber += 1;
+        const currentChangeNumber = changeNumber;
+        // console.log("delay before", currentChangeNumber, changeNumber);
+        await delay(1500);
+        // console.log("delay after", currentChangeNumber, changeNumber);
+
+        if (
+          SearchText === "" ||
+          cryptoList.includes(SearchText.toUpperCase()) ||
+          currentChangeNumber !== changeNumber
+        ) {
           return;
         }
 
