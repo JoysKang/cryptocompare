@@ -1,12 +1,13 @@
 import { List, Action, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { fetchData, cryptoList } from "./api";
+import { fetchData, cryptoList, addFavoriteCrypto } from "./api";
 import { delay } from "./utils";
 
 interface Data {
   icon: string;
   name: string;
   price: string;
+  favorite?: boolean;
 }
 
 export default function Command() {
@@ -26,7 +27,6 @@ export default function Command() {
 
   return (
     <List
-      selectedItemId="USDT"
       isLoading={isLoading}
       filtering={false}
       onSearchTextChange={async (SearchText) => {
@@ -56,10 +56,13 @@ export default function Command() {
           key={item.name}
           title={item.name}
           icon={{ source: item.icon }}
+          accessories={item.favorite ? [{ icon: "favorite.png", tooltip: "Favorited" }] : []}
           subtitle={item.price}
           actions={
             <ActionPanel>
               <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />
+              <Action.SubmitForm title="Add to Favorite" onSubmit={() => addFavoriteCrypto(item.name)} />
+              {/* <Action.SubmitForm title="Add to Favorite" onSubmit={() => refreshList()} /> */}
             </ActionPanel>
           }
         />

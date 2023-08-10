@@ -1,7 +1,9 @@
+import { LocalStorage } from "@raycast/api";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 let cryptos = "BTC,ETH,USDT";
-export const cryptoList: string[] = ["BTC", "ETH", "USDT"];
+export let cryptoList: string[] = [];
+// export let useEffectDeps = 0;
 const fiats = "USD,EUR,AUD,CNY";
 const fiatSymbol = {
   USD: "$",
@@ -21,6 +23,32 @@ const requests = {
   get: (url: string, config: AxiosRequestConfig = {}) => instance.get(url, config).then(responseBody),
 };
 
+export async function getFavoriteCrypto() {
+  const cryptoListFromLocalStorage = await LocalStorage.getItem("favoriteCrypto");
+  if (!cryptoListFromLocalStorage) {
+    return [];
+  } else if (typeof cryptoListFromLocalStorage === "string") {
+    return cryptoListFromLocalStorage.split(",");
+  } else {
+    return [];
+  }
+}
+
+// 获取 cryptoList
+export async function updateCryptoList() {
+  const favoriteCrypto = await getFavoriteCrypto();
+  console.log(favoriteCrypto, "1111");
+  if (favoriteCrypto.length === 0) {
+    cryptoList = ["BTC", "ETH", "USDT"];
+    console.log("初次调用");
+    await LocalStorage.setItem("favoriteCrypto", "BTC,ETH,USDT");
+  } else {
+    console.log("非初次调用");
+    cryptoList = [...new Set(cryptoList.concat(favoriteCrypto))];
+  }
+  return cryptoList;
+}
+
 /**
  * Fetches data based on the specified search criteria.
  *
@@ -29,6 +57,9 @@ const requests = {
  */
 export async function fetchData(searchCryptos: string) {
   try {
+    await updateCryptoList();
+    const favoriteCrypto = await getFavoriteCrypto();
+
     if (searchCryptos) {
       // 单次搜索多个交易对
       if (searchCryptos.includes(",")) {
@@ -57,8 +88,10 @@ export async function fetchData(searchCryptos: string) {
       let priceStr = "";
       let icon = "";
       const crypto = response.RAW[item];
+      console.log(item, favoriteCrypto.includes(item), "0000");
+      const favorite = favoriteCrypto.includes(item);
       if (crypto === undefined) {
-        return { icon: "not-found.png", name: item, price: "Price not found." };
+        return { icon: "not-found.png", name: item, price: "Price not found.", favorite: favorite };
       }
 
       for (const [key, value] of Object.entries(fiatSymbol)) {
@@ -68,7 +101,7 @@ export async function fetchData(searchCryptos: string) {
         }
       }
 
-      return { icon: icon, name: item, price: priceStr };
+      return { icon: icon, name: item, price: priceStr, favorite: favorite };
     });
 
     return newPriceData;
@@ -76,4 +109,18 @@ export async function fetchData(searchCryptos: string) {
     console.log(e);
     return [];
   }
+}
+
+export async function addFavoriteCrypto(crypto: string) {
+  console.log("addFavoriteCrypto 调用");
+  crypto = crypto.toUpperCase();
+  const favoriteCrypto = await getFavoriteCrypto();
+  if (favoriteCrypto.length === 0) {
+    await LocalStorage.setItem("favoriteCrypto", crypto);
+  } else {
+    favoriteCrypto.push(crypto);
+    await LocalStorage.setItem("favoriteCrypto", favoriteCrypto.join(","));
+  }
+  // useEffectDeps += 1;
+  // console.log("useEffectDeps 反转");
 }
