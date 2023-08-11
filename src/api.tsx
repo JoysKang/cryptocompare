@@ -3,7 +3,6 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 let cryptos = "BTC,ETH,USDT";
 export let cryptoList: string[] = [];
-// export let useEffectDeps = 0;
 const fiats = "USD,EUR,AUD,CNY";
 const fiatSymbol = {
   USD: "$",
@@ -121,6 +120,4 @@ export async function addFavoriteCrypto(crypto: string) {
     favoriteCrypto.push(crypto);
     await LocalStorage.setItem("favoriteCrypto", favoriteCrypto.join(","));
   }
-  // useEffectDeps += 1;
-  // console.log("useEffectDeps 反转");
 }

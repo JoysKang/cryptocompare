@@ -61,8 +61,20 @@ export default function Command() {
           actions={
             <ActionPanel>
               <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />
-              <Action.SubmitForm title="Add to Favorite" onSubmit={() => addFavoriteCrypto(item.name)} />
-              {/* <Action.SubmitForm title="Add to Favorite" onSubmit={() => refreshList()} /> */}
+              <Action
+                title="Add to Favorite"
+                onAction={async () => {
+                  setPriceData((priceData) =>
+                    priceData.map((i) => {
+                      if (i.name === item.name) {
+                        return { ...i, favorite: true };
+                      }
+                      return i;
+                    })
+                  );
+                  addFavoriteCrypto(item.name);
+                }}
+              />
             </ActionPanel>
           }
         />
