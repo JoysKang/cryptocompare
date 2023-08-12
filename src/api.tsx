@@ -1,5 +1,6 @@
 import { LocalStorage } from "@raycast/api";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { formatNumber } from "./utils";
 
 let cryptos = "";
 export let cryptoList: string[] = [];
@@ -96,7 +97,7 @@ export async function fetchData(searchCryptos: string) {
 
       for (const [key, value] of Object.entries(fiatSymbol)) {
         if (key in crypto && crypto[key]) {
-          priceStr += value + crypto[key].PRICE + "  ";
+          priceStr += value + formatNumber(crypto[key].PRICE) + "  ";
           icon = "https://cryptocompare.com" + crypto[key].IMAGEURL;
         }
       }
