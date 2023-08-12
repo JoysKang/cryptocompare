@@ -121,3 +121,13 @@ export async function addFavoriteCrypto(crypto: string) {
     await LocalStorage.setItem("favoriteCrypto", favoriteCrypto.join(","));
   }
 }
+
+export async function removeFavoriteCrypto(crypto: string) {
+  crypto = crypto.toUpperCase();
+  const favoriteCrypto = await getFavoriteCrypto();
+  if (!favoriteCrypto.includes(crypto)) {
+    return;
+  }
+  favoriteCrypto.splice(favoriteCrypto.indexOf(crypto), 1);
+  await LocalStorage.setItem("favoriteCrypto", favoriteCrypto.join(","));
+}

@@ -1,6 +1,6 @@
 import { List, Action, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { fetchData, cryptoList, addFavoriteCrypto } from "./api";
+import { fetchData, cryptoList, addFavoriteCrypto, removeFavoriteCrypto } from "./api";
 import { delay } from "./utils";
 
 interface Data {
@@ -62,17 +62,21 @@ export default function Command() {
             <ActionPanel>
               <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />
               <Action
-                title="Add to Favorite"
+                title={item.favorite ? "Remove From Favorite" : "Add To Favorite"}
                 onAction={async () => {
                   setPriceData((priceData) =>
                     priceData.map((i) => {
                       if (i.name === item.name) {
-                        return { ...i, favorite: true };
+                        return { ...i, favorite: !item.favorite };
                       }
                       return i;
                     })
                   );
-                  addFavoriteCrypto(item.name);
+                  if (item.favorite) {
+                    await removeFavoriteCrypto(item.name);
+                  } else {
+                    addFavoriteCrypto(item.name);
+                  }
                 }}
               />
             </ActionPanel>
