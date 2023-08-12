@@ -1,7 +1,7 @@
 import { LocalStorage } from "@raycast/api";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-let cryptos = "BTC,ETH,USDT";
+let cryptos = "";
 export let cryptoList: string[] = [];
 const fiats = "USD,EUR,AUD,CNY";
 const fiatSymbol = {
@@ -55,6 +55,11 @@ export async function fetchData(searchCryptos: string) {
   try {
     await updateCryptoList();
     const favoriteCrypto = await getFavoriteCrypto();
+    if (favoriteCrypto.length === 0) {
+      cryptos = "BTC,ETH,USDT";
+    } else {
+      cryptos = favoriteCrypto.join(",");
+    }
 
     if (searchCryptos) {
       // 单次搜索多个交易对
