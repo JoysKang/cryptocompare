@@ -57,13 +57,13 @@ export default function Command() {
           key={item.name}
           title={item.name}
           icon={{ source: item.icon }}
-          accessories={item.favorite ? [{ icon: "favorite.png", tooltip: "Favorited" }] : []}
+          accessories={item.favorite ? [{ icon: "favorited.png", tooltip: "Favorited" }] : []}
           subtitle={{ value: item.price, tooltip: item.markets }}
           actions={
             <ActionPanel>
-              <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />
               <Action
                 title={item.favorite ? "Remove From Favorite" : "Add To Favorite"}
+                icon={item.favorite ? "remove.png" : "favorite.png"}
                 onAction={async () => {
                   setPriceData((priceData) =>
                     priceData.map((i) => {
@@ -78,6 +78,16 @@ export default function Command() {
                   } else {
                     addFavoriteCrypto(item.name);
                   }
+                }}
+              />
+              <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />
+              <Action
+                title="Refresh"
+                icon="refresh.png"
+                onAction={async () => {
+                  setIsLoading(true);
+                  setPriceData(await fetchData(""));
+                  setIsLoading(false);
                 }}
               />
             </ActionPanel>
