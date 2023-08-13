@@ -7,6 +7,7 @@ interface Data {
   icon: string;
   name: string;
   price: string;
+  markets: string;
   favorite?: boolean;
 }
 
@@ -57,7 +58,7 @@ export default function Command() {
           title={item.name}
           icon={{ source: item.icon }}
           accessories={item.favorite ? [{ icon: "favorite.png", tooltip: "Favorited" }] : []}
-          subtitle={item.price}
+          subtitle={{ value: item.price, tooltip: item.markets }}
           actions={
             <ActionPanel>
               <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />

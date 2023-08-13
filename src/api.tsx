@@ -89,20 +89,25 @@ export async function fetchData(searchCryptos: string) {
     const newPriceData = cryptoList.map((item) => {
       let priceStr = "";
       let icon = "";
+      const markets: Set<string> = new Set();
       const crypto = response.RAW[item];
       const favorite = favoriteCrypto.includes(item);
       if (crypto === undefined) {
-        return { icon: "not-found.png", name: item, price: "Price not found.", favorite: favorite };
+        return { icon: "not-found.png", name: item, price: "Price not found.", markets: "", favorite: favorite };
       }
 
       for (const [key, value] of Object.entries(fiatSymbol)) {
-        if (key in crypto && crypto[key]) {
-          priceStr += value + formatNumber(crypto[key].PRICE) + "  ";
-          icon = "https://cryptocompare.com" + crypto[key].IMAGEURL;
+        const fiatValue = crypto[key];
+        if (key in crypto && fiatValue) {
+          priceStr += value + formatNumber(fiatValue.PRICE) + "  ";
+          markets.add(fiatValue.MARKET);
+          icon = "https://cryptocompare.com" + fiatValue.IMAGEURL;
         }
       }
+      const newMarkets: string[] = Array.from(markets);
+      const marketsString = "From " + newMarkets.join(", ") + ".";
 
-      return { icon: icon, name: item, price: priceStr, favorite: favorite };
+      return { icon: icon, name: item, price: priceStr, markets: marketsString, favorite: favorite };
     });
 
     return newPriceData;
