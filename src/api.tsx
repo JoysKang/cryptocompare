@@ -23,6 +23,11 @@ const requests = {
   get: (url: string, config: AxiosRequestConfig = {}) => instance.get(url, config).then(responseBody),
 };
 
+/**
+ * Retrieves the favorite cryptocurrencies from the local storage.
+ *
+ * @return {Promise<string[]>} An array of favorite cryptocurrencies.
+ */
 export async function getFavoriteCrypto() {
   const cryptoListFromLocalStorage = await LocalStorage.getItem("favoriteCrypto");
   if (!cryptoListFromLocalStorage) {
@@ -34,16 +39,23 @@ export async function getFavoriteCrypto() {
   }
 }
 
-// 获取 cryptoList
+/**
+ * Updates the cryptoList with the favorite cryptocurrencies.
+ * If no favorite cryptocurrencies are found, it sets the default cryptoList to ["BTC", "ETH"].
+ * The updated cryptoList is stored in the local storage.
+ * @returns {string[]} The updated cryptoList.
+ */
 export async function updateCryptoList() {
+  // Get the favorite cryptocurrencies from the local storage
   const favoriteCrypto = await getFavoriteCrypto();
+
   if (favoriteCrypto.length === 0) {
-    cryptoList = ["BTC", "ETH", "USDT"];
-    await LocalStorage.setItem("favoriteCrypto", "BTC,ETH,USDT");
-  } else {
-    cryptoList = [...new Set(cryptoList.concat(favoriteCrypto))];
+    cryptoList = ["BTC", "ETH"];
+    await LocalStorage.setItem("favoriteCrypto", "BTC,ETH");
+    return cryptoList;
   }
-  return cryptoList;
+
+  cryptoList = [...new Set(cryptoList.concat(favoriteCrypto))];
 }
 
 /**
@@ -117,6 +129,12 @@ export async function fetchData(searchCryptos: string) {
   }
 }
 
+/**
+ * Adds a favorite cryptocurrency to the list of favorite cryptocurrencies.
+ *
+ * @param {string} crypto - The cryptocurrency to add as a favorite.
+ * @return {Promise<void>} - A promise that resolves when the favorite cryptocurrency is added.
+ */
 export async function addFavoriteCrypto(crypto: string) {
   crypto = crypto.toUpperCase();
   const favoriteCrypto = await getFavoriteCrypto();
@@ -128,6 +146,12 @@ export async function addFavoriteCrypto(crypto: string) {
   }
 }
 
+/**
+ * Removes a favorite crypto from the list of favorite cryptos.
+ *
+ * @param {string} crypto - The crypto to be removed.
+ * @return {Promise<void>} - A promise that resolves when the crypto is removed.
+ */
 export async function removeFavoriteCrypto(crypto: string) {
   crypto = crypto.toUpperCase();
   const favoriteCrypto = await getFavoriteCrypto();
