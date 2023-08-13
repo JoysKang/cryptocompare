@@ -4,7 +4,7 @@ import { formatNumber } from "./utils";
 
 let cryptos = "";
 export let cryptoList: string[] = [];
-const fiats = "USD,EUR,AUD,CNY";
+const fiats = "USD,EUR,AUD";
 const fiatSymbol = {
   USD: "$",
   EUR: "€",
