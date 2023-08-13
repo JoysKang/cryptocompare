@@ -68,10 +68,13 @@ export async function fetchData(searchCryptos: string) {
   try {
     await updateCryptoList();
     const favoriteCrypto = await getFavoriteCrypto();
-    if (favoriteCrypto.length === 0) {
-      cryptos = "BTC,ETH,USDT";
-    } else {
+
+    if (cryptos === "") {
       cryptos = favoriteCrypto.join(",");
+    }
+
+    if (cryptos === "") {
+      cryptos = "BTC,ETH";
     }
 
     if (searchCryptos) {
@@ -87,7 +90,7 @@ export async function fetchData(searchCryptos: string) {
         cryptos += "," + searchCryptos;
       }
     }
-    // console.log("https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos);
+    console.log("https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos);
     const response = await requests.get(
       "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=" + fiats + "&fsyms=" + cryptos
     );
