@@ -1,4 +1,4 @@
-import { List, Action, ActionPanel, Toast, showToast } from "@raycast/api";
+import { List, Action, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { fetchData, cryptoList, addFavoriteCrypto, removeFavoriteCrypto } from "./api";
 import { delay } from "./utils";
