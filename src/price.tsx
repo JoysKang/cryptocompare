@@ -27,7 +27,7 @@ export default function Command() {
   }, []);
 
   function getActions(item: Data) {
-    return [
+    const actions = [
       <Action.CopyToClipboard title="Copy Price" content={item.price} onCopy={() => item.price} />,
       <Action
         title={item.favorite ? "Remove From Favorite" : "Add To Favorite"}
@@ -58,6 +58,41 @@ export default function Command() {
         }}
       />,
     ];
+    return <ActionPanel>{...actions}</ActionPanel>;
+  }
+
+  function getList() {
+    const listItemList: Array<any> = [];
+    const listSectionList: Array<any> = [];
+    priceData.map((item: Data) => {
+      if (item.favorite) {
+        listSectionList.push(
+          <List.Item
+            key={item.name}
+            title={item.name}
+            icon={{ source: item.icon }}
+            accessories={item.favorite ? [{ icon: "favorited.png", tooltip: "Favorited" }] : []}
+            subtitle={{ value: item.price, tooltip: item.markets }}
+            actions={getActions(item)}
+          />
+        );
+      } else {
+        listItemList.push(
+          <List.Item
+            key={item.name}
+            title={item.name}
+            icon={{ source: item.icon }}
+            accessories={item.favorite ? [{ icon: "favorited.png", tooltip: "Favorited" }] : []}
+            subtitle={{ value: item.price, tooltip: item.markets }}
+            actions={getActions(item)}
+          />
+        );
+      }
+    });
+    return [
+      <List.Section title="Favorited">{...listSectionList}</List.Section>,
+      <List.Section title="Not Favorited">{...listItemList}</List.Section>,
+    ];
   }
 
   return (
@@ -86,16 +121,7 @@ export default function Command() {
       throttle={true}
       searchBarPlaceholder="Search for prices of digital coins"
     >
-      {priceData.map((item) => (
-        <List.Item
-          key={item.name}
-          title={item.name}
-          icon={{ source: item.icon }}
-          accessories={item.favorite ? [{ icon: "favorited.png", tooltip: "Favorited" }] : []}
-          subtitle={{ value: item.price, tooltip: item.markets }}
-          actions={<ActionPanel>{...getActions(item)}</ActionPanel>}
-        />
-      ))}
+      {...getList()}
     </List>
   );
 }
